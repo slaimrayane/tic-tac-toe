@@ -1,12 +1,56 @@
-
 import './App.css';
 import {useState} from "react";
 
+ // TO DO
+ //For the current move only, show “You are at move #…” instead of a button.
+ //Rewrite Board to use two loops to make the squares instead of hardcoding them.
+ //Add a toggle button that lets you sort the moves in either ascending or descending order.
+ //When someone wins, highlight the three squares that caused the win (and when no one wins, display a message about the result being a draw).
+ //Display the location for each move in the format (row, col) in the move history list.
+export default function Game (){
 
+    const [history, setHistory] = useState([Array(9).fill(null)]);
+    const [currentMove,setCurrentMove] = useState((0));
+    const currentSquares = history[currentMove];
+    const xIsNext = currentMove % 2 === 0;
+    function handlePlay(nextSquares){
+        const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
 
-export default function Board() {
-    const [squares,setSquares]=useState(Array(9).fill(null));
-    const [xTurn,setXTurn]=useState(true);
+        setHistory(nextHistory);
+        setCurrentMove(nextHistory.length - 1);
+    }
+    function jumpTo(nextMove) {
+        setCurrentMove(nextMove);
+
+    }
+
+    const moves = history.map((squares, move) => {
+        let description;
+        if (move > 0) {
+            description = 'Go to move #' + move;
+        } else {
+            description = 'Go to game start';
+        }
+        return (
+            <li key={move}>
+                <button onClick={() => jumpTo(move)}>{description}</button>
+            </li>
+        );
+    });
+    return(
+        <div className="game">
+            <div className="game-board">
+                <Board squares={currentSquares} onplay={handlePlay} xTurn={xIsNext}/>
+            </div>
+            <div className="game-info">
+                <ol>{moves}
+                </ol>
+            </div>
+        </div>
+    );
+}
+
+function Board({xTurn,squares,onplay}) {
     function handleClick(i) {
         if (squares[i] || calculateWinner(squares)) {
             return;
@@ -17,8 +61,8 @@ export default function Board() {
         }else {
             nextSquares[i]="O"
         }
-        setSquares(nextSquares);
-        setXTurn(!xTurn);
+        onplay(nextSquares);
+
     }
     const winner = calculateWinner(squares);
     let status;
