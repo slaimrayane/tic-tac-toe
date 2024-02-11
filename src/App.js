@@ -3,7 +3,7 @@ import {useState} from "react";
 
  // TO DO
  //For the current move only, show “You are at move #…” instead of a button.
- //Rewrite Board to use two loops to make the squares instead of hardcoding them.
+ //Rewrite Board to use two loops to make the squares instead of hardCoding them.
  //Add a toggle button that lets you sort the moves in either ascending or descending order.
  //When someone wins, highlight the three squares that caused the win (and when no one wins, display a message about the result being a draw).
  //Display the location for each move in the format (row, col) in the move history list.
@@ -85,9 +85,9 @@ function Board({xTurn,squares,onplay}) {
     }
     const boardInit =()=>{
         let board =[];
-        for (var j=0;j<3;j++) {
+        for (let j=0;j<3;j++) {
             let br =[];
-            for (var k=0;k<3;k++){
+            for (let k=0;k<3;k++){
                 let f=3*j+k;
             br.push( <Square value={squares[f]} handleClick={() => handleClick(f)}/>);
              }
