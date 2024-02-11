@@ -25,17 +25,25 @@ export default function Game (){
     }
 
     const moves = history.map((squares, move) => {
-        let description;
-        if (move > 0) {
-            description = 'Go to move #' + move;
+        let description ='start of the game';
+        if (move === currentMove){
+            description = 'You are at move #' + move;
+            return (
+                <li key={move}>
+                    <div className="current-move">{description}</div>
+                </li>);
         } else {
-            description = 'Go to game start';
-        }
-        return (
-            <li key={move}>
-                <button onClick={() => jumpTo(move)}>{description}</button>
-            </li>
-        );
+            if (move > 0) {
+                description = 'Go to move #' + move;
+            } else {
+                description = 'Go to game start';
+            }
+             return (
+               <li key={move}>
+                   <button onClick={() => jumpTo(move)}>{description}</button>
+               </li>
+             );
+      }
     });
     return(
         <div className="game">
@@ -71,25 +79,28 @@ function Board({xTurn,squares,onplay}) {
     } else {
         status = "Next player: " + (xTurn ? "X" : "O");
     }
+    const boardInit =()=>{
+        let board =[];
+        for (var j=0;j<3;j++) {
+            let br =[];
+            for (var k=0;k<3;k++){
+                let f=3*j+k;
+            br.push( <Square value={squares[f]} handleClick={() => handleClick(f)}/>);
+             }
+               board.push(
+                   <div className="board-row">
+                       {br}
+                   </div>
+               );
+        }
+        return(board);
+
+    }
     return (
         <>
             <div className="status">{status}</div>
-            <div className="board-row">
-                <Square value={squares[0]} handleClick={() => handleClick(0)}/>
-                <Square value={squares[1]} handleClick={() => handleClick(1)}/>
-                <Square value={squares[2]} handleClick={() => handleClick(2)}/>
-            </div>
-            <div className="board-row">
-                <Square value={squares[3]} handleClick={() => handleClick(3)}/>
-                <Square value={squares[4]} handleClick={() => handleClick(4)}/>
-                <Square value={squares[5]} handleClick={() => handleClick(5)}/>
+            <div className="board">{boardInit()}</div>
 
-            </div>
-            <div className="board-row">
-                <Square value={squares[6]} handleClick={() => handleClick(6)}/>
-                <Square value={squares[7]} handleClick={() => handleClick(7)}/>
-                <Square value={squares[8]} handleClick={() => handleClick(8)}/>
-            </div>
         </>
     );
 }
@@ -119,3 +130,4 @@ function calculateWinner(squares) {
     }
     return null;
 }
+
